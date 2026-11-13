@@ -276,7 +276,7 @@ export default function ProductionOrderScreen() {
               <Text style={styles.warn}>{n0(runQty)} units is over this week's capacity of {n0(capacity)}. Request the overtime shift above, or bring the quantity down to capacity.</Text>
             ) : overBudget ? (
               <>
-                <Text style={styles.warn}>{money2(shortfall)} over the product's remaining material budget. Release as a budget override and the Plant Controller will approve it in the Agent Operations Manager.</Text>
+                <Text style={styles.warn}>{money2(shortfall)} over the product's remaining material budget. Release as a budget override and the Plant Controller will approve it in the Couchbase Labs Agent Operations Manager.</Text>
                 <TextInput value={overrideReason} onChangeText={setOverrideReason} placeholder="Reason for the override" placeholderTextColor={theme.color.faint} style={styles.field} />
                 <Button label={`Release as budget override · ${money2(total)}`} icon="shield-checkmark" onPress={() => void submit(true)} disabled={!lines.length} />
                 <Button label="Try as a normal release anyway" kind="ghost" onPress={() => void submit(false)} disabled={!lines.length} />
@@ -284,7 +284,7 @@ export default function ProductionOrderScreen() {
             ) : (
               <Button label={`Release production order · ${n0(runQty)} units`} icon="checkmark-done" onPress={() => void submit(false)} disabled={!canRelease} />
             )}
-            <Text style={styles.tiny}>Costed on this phone from the materials catalog in Couchbase Lite. The order is saved locally and sent through Sync Gateway when you have a connection; Couchbase AOM runs it as a governed tool call.</Text>
+            <Text style={styles.tiny}>Costed on this phone from the materials catalog in Couchbase Lite. The order is saved locally and sent through Sync Gateway when you have a connection; Couchbase Labs Agent Operations Manager runs it as a governed tool call.</Text>
           </Card>
         </>
       )}

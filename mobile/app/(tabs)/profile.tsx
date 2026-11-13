@@ -64,12 +64,12 @@ export default function Profile() {
         <Text style={styles.tiny}>Plant channel: every product and production plan in {r?.plant_name ?? 'your plant'} syncs to this phone; your own channel carries today's floor walk, your production orders and assistant history.</Text>
       </Card>
 
-      <SectionTitle title="Agent Operations Manager" />
+      <SectionTitle title="Couchbase Labs Agent Operations Manager" />
       <Card style={{ padding: 16, gap: 8 }}>
         <Text style={styles.meta}>
           Every production order, budget override, overtime shift, standing order, supplier return and line check becomes a request that the Planning Assistant agent runs
-          through Couchbase AOM: RBAC and tool scope, human approval for budget overrides (Plant Controller) and overtime shifts (Plant Manager), a trace and an audit entry.
-          Assistant answers use AOM's Knowledge Base, Context Cache, memory and LLM cache.
+          through Couchbase Labs Agent Operations Manager: RBAC and tool scope, human approval for budget overrides (Plant Controller) and overtime shifts (Plant Manager), a trace and an audit entry.
+          Assistant answers use Couchbase Labs Agent Operations Manager's Knowledge Base, Context Cache, memory and LLM cache.
         </Text>
         <Row icon="link-outline" label="Backend" value={API_URL} />
         <Row icon="finger-print-outline" label="Planner ID" value={session?.planner_id ?? '—'} />

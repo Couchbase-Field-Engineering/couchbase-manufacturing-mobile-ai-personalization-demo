@@ -5,7 +5,7 @@
  *  2. the product's production plan (`production_plans` doc) and product document
  *     (forecast, inventory, schedule, alerts, budget, line, history)
  *  3. the product's context cache (`context_cache` docs the server assembled
- *     from the AOM Knowledge Base + tool facts)
+ *     from the Couchbase Labs Agent Operations Manager Knowledge Base + tool facts)
  *  4. the playbook FAQ synced in the `catalog` doc
  *
  * Mirrors backend/app/assistant.py's intent keywords so the same question

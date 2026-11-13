@@ -27,7 +27,7 @@ function llmLabel(m: ChatMessage): { label: string; tone: 'ok' | 'info' | 'neutr
   if (s === 'hit_exact') return { label: 'LLM cache · exact hit', tone: 'ok' };
   if (s === 'hit_semantic') return { label: `LLM cache · semantic hit${m.llm?.similarity ? ` ${m.llm.similarity.toFixed(2)}` : ''}`, tone: 'ok' };
   if (s === 'miss') return { label: `LLM cache · miss${m.llm?.latency_ms ? ` · ${Math.round(m.llm.latency_ms)}ms` : ''}`, tone: 'neutral' };
-  if (s === 'local') return { label: 'Composed from context (AOM not configured)', tone: 'neutral' };
+  if (s === 'local') return { label: 'Composed from context (Couchbase Labs Agent Operations Manager not configured)', tone: 'neutral' };
   if (s === 'skipped') return null;
   if (s === 'bypass') return { label: 'LLM cache · bypassed', tone: 'neutral' };
   return { label: `LLM · ${s}`, tone: 'warn' };
@@ -61,7 +61,7 @@ export default function Assistant() {
           <View style={styles.bot}><Ionicons name="sparkles" size={18} color={theme.color.onDark} /></View>
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>Assistant</Text>
-            <Text style={styles.subtitle}>Planning Assistant agent · governed by Couchbase AOM</Text>
+            <Text style={styles.subtitle}>Planning Assistant agent · governed by Couchbase Labs Agent Operations Manager</Text>
           </View>
         </View>
         <View style={{ marginTop: 10, flexDirection: 'row', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -86,7 +86,7 @@ export default function Assistant() {
             <Text style={styles.introTitle}>{product ? `Ask me anything about ${product.product_name}.` : 'Pick a product and ask away.'}</Text>
             <Text style={styles.introBody}>
               Forecast, build quantity, inventory and safety stock, materials and warehouse stock, alerts, overtime, budget and history. Answers come from the product's context cache
-              in Couchbase and AOM's Knowledge Base - and when you're offline, straight from this phone. Nothing here queries Databricks.
+              in Couchbase and Couchbase Labs Agent Operations Manager's Knowledge Base - and when you're offline, straight from this phone. Nothing here queries Databricks.
             </Text>
           </View>
         ) : null}

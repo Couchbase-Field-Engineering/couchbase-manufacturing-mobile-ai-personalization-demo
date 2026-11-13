@@ -93,7 +93,7 @@ function SidePanel() {
       {[
         ['phone-portrait-outline', 'Couchbase Lite', 'Offline-first: production orders queue on the phone in the press shop'],
         ['analytics-outline', 'Databricks offload', 'One nightly export; no warehouse query per screen'],
-        ['shield-checkmark-outline', 'Governed actions', 'Production orders, budget overrides and overtime shifts run as audited AOM tool calls'],
+        ['shield-checkmark-outline', 'Governed actions', 'Production orders, budget overrides and overtime shifts run as audited Couchbase Labs Agent Operations Manager tool calls'],
       ].map(([icon, title, body]) => (
         <View key={title} style={styles.point}>
           <Ionicons name={icon as keyof typeof Ionicons.glyphMap} size={18} color={theme.color.red} />

@@ -12,13 +12,13 @@ It keeps working **in a press shop with no Wi-Fi** - and in the foundry bay, the
 
 The data comes from a **daily Databricks export** of the demand-planning model, and that is the only Databricks compute the app ever uses. Every forecast read, production plan, material lookup and assistant answer during the day is served from Couchbase (or Couchbase Lite), never from a SQL warehouse or a Model Serving endpoint. The story page counts the warehouse queries that didn't run.
 
-The app's assistant is **registered with, and governed by, the Couchbase Agent Operations Manager (AOM)**:
+The app's assistant is **registered with, and governed by, the Couchbase Labs Agent Operations Manager**:
 
-* answers are grounded in AOM's **Knowledge Base** (the Production Planning Playbook and one profile document per product)
-* it is registered as an AOM **RAG Application** (`mfg-planning-assistant`), so its queries, cache hits and cost savings show on AOM's *RAG Applications* page
-* the context it builds for each product question is cached in AOM's **Context Cache** and in Couchbase, which syncs it to the phone
-* LLM calls go through AOM's **LLM Caching** gateway
-* every production order, budget override, overtime shift, standing order, supplier return and line check runs as an RBAC-checked, traced and audited AOM tool call, with human approval for budget overrides (the Plant Controller) and overtime shifts (the Plant Manager)
+* answers are grounded in Couchbase Labs Agent Operations Manager's **Knowledge Base** (the Production Planning Playbook and one profile document per product)
+* it is registered as a Couchbase Labs Agent Operations Manager **RAG Application** (`mfg-planning-assistant`), so its queries, cache hits and cost savings show on Couchbase Labs Agent Operations Manager's *RAG Applications* page
+* the context it builds for each product question is cached in Couchbase Labs Agent Operations Manager's **Context Cache** and in Couchbase, which syncs it to the phone
+* LLM calls go through Couchbase Labs Agent Operations Manager's **LLM Caching** gateway
+* every production order, budget override, overtime shift, standing order, supplier return and line check runs as an RBAC-checked, traced and audited Couchbase Labs Agent Operations Manager tool call, with human approval for budget overrides (the Plant Controller) and overtime shifts (the Plant Manager)
 
 ---
 
@@ -30,9 +30,9 @@ The app's assistant is **registered with, and governed by, the Couchbase Agent O
 2. **What the app needs.** The three decisions the model makes (schedule, inventory, materials) and eight requirements: four for the phone, four for the AI and the data platform.
 3. **The Databricks bill.** The per-request design (a warehouse query per screen, a Model Serving call per product) next to the nightly-export design. Press **Transform the stack**, or **T**, and watch "warehouse queries per day" go from 144,000 to 1.
 4. **Offline-first, step by step.** The same production order in two phones, one with Couchbase Lite and one online-only. Press **Next step**, or Space.
-5. **One data plane for the AI.** Databricks to Couchbase to the AOM Knowledge Base, RAG app and caches, and on to the phone - with live numbers from the running backend.
+5. **One data plane for the AI.** Databricks to Couchbase to the Couchbase Labs Agent Operations Manager Knowledge Base, RAG app and caches, and on to the phone - with live numbers from the running backend.
 6. **Where the Databricks money goes.** Per-request serving vs. nightly export + Couchbase, line by line.
-7. **See it run.** Links to the app and the AOM dashboard, plus a ten-minute demo script.
+7. **See it run.** Links to the app and the Couchbase Labs Agent Operations Manager dashboard, plus a ten-minute demo script.
 
 ## What the demo shows
 
@@ -43,34 +43,34 @@ The app's assistant is **registered with, and governed by, the Couchbase Agent O
 | **Inventory levels** | Finished goods on hand, days of cover against the service class's target, safety stock and the model's recommended safety stock. Ask the assistant "How much inventory do we have and is the safety stock right?" |
 | **Material ordering from Databricks** | The plan's material lines are the model's recommendations with days-to-stockout, checked against on-hand units at the plant's warehouse, the supplier lead time (long-lead items are flagged) and the product's remaining material budget. Forward-buy candidates come from the commodity and lead-time indexes. The plan re-ranks after every release. |
 | **Couchbase Lite: offline and online** | Turning on *Profile → No signal* pauses replication. You can still open any product, walk the readiness checklist, set the build, pick materials, release the production order (saved as a `production_orders` document marked **On device**), and ask the assistant. Switch it off: the order syncs and comes back **Completed** (or **Materials on order** with an ETA and a follow-up date). |
-| **Budget override with human approval** | The HP-2200 plan exceeds what is left of its quarterly material budget. A plain `release_production_order` fails with `reason_code: budget_limit`; releasing it as `request_budget_override` is held by AOM as **Awaiting approval** until the Plant Controller approves it on AOM's Approvals page, after which the order is released, both alerts clear and the schedule shows the new quantity. |
-| **Overtime shift with Plant Manager approval** | The EH-300 enclosure's recommended build (5,200) is over its press's weekly capacity (4,600). A release at that quantity fails with `capacity_limit`; `request_overtime_shift` (11 hours) is held by AOM until the Plant Manager approves it, the line's capacity goes up and the full build can be released. |
+| **Budget override with human approval** | The HP-2200 plan exceeds what is left of its quarterly material budget. A plain `release_production_order` fails with `reason_code: budget_limit`; releasing it as `request_budget_override` is held by Couchbase Labs Agent Operations Manager as **Awaiting approval** until the Plant Controller approves it on Couchbase Labs Agent Operations Manager's Approvals page, after which the order is released, both alerts clear and the schedule shows the new quantity. |
+| **Overtime shift with Plant Manager approval** | The EH-300 enclosure's recommended build (5,200) is over its press's weekly capacity (4,600). A release at that quantity fails with `capacity_limit`; `request_overtime_shift` (11 hours) is held by Couchbase Labs Agent Operations Manager until the Plant Manager approves it, the line's capacity goes up and the full build can be released. |
 | **Quality hold** | HS-612 Heat Shield is on a quality hold (customer complaint containment). Releases are refused with `quality_hold`, overrides and overtime can't lift it, and the assistant steers to logging the line check as *on hold*. |
 | **Databricks offload** | `/api/status → metrics` counts every product 360, production plan, material lookup and assistant context served from Couchbase instead of a warehouse query or a Model Serving call, and turns it into dollars. Chapter 5 of the story shows it live. |
-| **Registered with AOM** | `scripts/register_with_aom.py` (or `AOM_AUTO_REGISTER` in Kubernetes) sets up the **Manufacturing Planning Assistant** agent identity (role `production_planner`, scoped to 10 tools), the **`mfg-production-planning`** MCP server, the approval tier, and the **`mfg-planning-assistant` RAG Application**. |
-| **AOM RAG Application** | Playbook questions ("How is safety stock set?", "How is the demand forecast built?") go to `POST /v1/agent/rag/mfg-planning-assistant/query`. The app is scoped to the one *Production Planning Playbook* document, so a generic question can never retrieve another plant's product. |
+| **Registered with Couchbase Labs Agent Operations Manager** | `scripts/register_with_aom.py` (or `AOM_AUTO_REGISTER` in Kubernetes) sets up the **Manufacturing Planning Assistant** agent identity (role `production_planner`, scoped to 10 tools), the **`mfg-production-planning`** MCP server, the approval tier, and the **`mfg-planning-assistant` RAG Application**. |
+| **Couchbase Labs Agent Operations Manager RAG Application** | Playbook questions ("How is safety stock set?", "How is the demand forecast built?") go to `POST /v1/agent/rag/mfg-planning-assistant/query`. The app is scoped to the one *Production Planning Playbook* document, so a generic question can never retrieve another plant's product. |
 | **Knowledge Base fed by the daily export** | The loader publishes the playbook plus one *Product profile* document per product due for a plan review soon. The assistant always searches with a `document_id` filter, so a question about one product can only be grounded in **that** product's profile. |
-| **Context Caching** | For product questions the assistant assembles context (the product's KB profile chunks, playbook chunks and live tool facts: schedule, inventory, material plan, alerts, warehouse on-hand, budget) and caches it in **AOM's Context Cache** (namespace `rag:mfg-planning-assistant:product-context`, key `<product>:<intent>:<export_date>:r<product rev>`). The next export or any release on the product changes the key, so the entry is never served stale. The same context is written to Couchbase as `ctx::<product>::<intent>`, which syncs to every planner in the plant; that copy is what the offline assistant answers from. |
+| **Context Caching** | For product questions the assistant assembles context (the product's KB profile chunks, playbook chunks and live tool facts: schedule, inventory, material plan, alerts, warehouse on-hand, budget) and caches it in **Couchbase Labs Agent Operations Manager's Context Cache** (namespace `rag:mfg-planning-assistant:product-context`, key `<product>:<intent>:<export_date>:r<product rev>`). The next export or any release on the product changes the key, so the entry is never served stale. The same context is written to Couchbase as `ctx::<product>::<intent>`, which syncs to every planner in the plant; that copy is what the offline assistant answers from. |
 | **LLM Caching** | Playbook questions contain no product data, so the second planner to ask the same question gets `LLM cache · exact hit`. Product questions go through `/v1/llm/complete` in the `rag:mfg-planning-assistant:product` namespace. |
 
 ---
 
 ## Architecture
 
-![Architecture: Databricks export, planner's phone with Couchbase Lite, demo stack (backend, Couchbase Server, Sync Gateway) and the Agent Operations Manager](docs/images/architecture.svg)
+![Architecture: Databricks export, planner's phone with Couchbase Lite, demo stack (backend, Couchbase Server, Sync Gateway) and the Couchbase Labs Agent Operations Manager](docs/images/architecture.svg)
 
 | # | Flow |
 |---|---|
 | **1** | Every morning the Databricks job drops a `dt=YYYY-MM-DD` JSON Lines partition, and the loader picks up the newest one with a `_SUCCESS` marker. Databricks is done for the day. |
 | **2** | The loader upserts every product, builds the production plan for every product due for a review soon, builds one floor-walk document per planner and publishes the materials catalog in Couchbase Server. The assistant reads and writes its **context cache** there, the worker reads pending production orders, and the MCP tools apply releases, schedule changes, stock and budget. |
-| **3** | The loader replaces the AOM **Knowledge Base** documents (the playbook and one profile per product due soon), then re-scopes the **RAG Application** to the new playbook. |
+| **3** | The loader replaces the Couchbase Labs Agent Operations Manager **Knowledge Base** documents (the playbook and one profile per product due soon), then re-scopes the **RAG Application** to the new playbook. |
 | **4** | Sign-in: the backend creates the planner's Sync Gateway user (channels `planner:<id>`, `plant:<id>`, `catalog`) and mints a session. The assistant is called over `/api`. |
 | **5** | **Couchbase Lite** replicates continuously with Sync Gateway. Every screen renders from the phone, and releases become `production_orders` documents saved locally, even offline. |
-| **6** | Playbook questions go to the assistant's **RAG Application** in one call. Product questions check AOM's **Context Cache**; on a miss the assistant does document-scoped **KB retrieval**, stores the context in AOM and Couchbase, recalls **memory**, then calls the **LLM Caching** gateway. |
-| **7** | AOM calls the LLM provider only on a cache miss. |
+| **6** | Playbook questions go to the assistant's **RAG Application** in one call. Product questions check Couchbase Labs Agent Operations Manager's **Context Cache**; on a miss the assistant does document-scoped **KB retrieval**, stores the context in Couchbase Labs Agent Operations Manager and Couchbase, recalls **memory**, then calls the **LLM Caching** gateway. |
+| **7** | Couchbase Labs Agent Operations Manager calls the LLM provider only on a cache miss. |
 | **8** | Sync Gateway carries production orders up and results back down: releases, materials on order, cleared alerts, the new schedule, the updated budget and the re-ranked plan. |
 | **9** | The worker runs each production order as the **Manufacturing Planning Assistant** agent through `POST /v1/tools/invoke`, so RBAC, tool scope, the approval tier, a trace and an audit entry are applied. |
-| **10** | AOM calls the `mfg-production-planning` MCP server, which sets the week's schedule, issues warehouse stock, commits the budget and re-ranks the plan in Couchbase, and that syncs back to the phone (2 → 8 → 5). |
+| **10** | Couchbase Labs Agent Operations Manager calls the `mfg-production-planning` MCP server, which sets the week's schedule, issues warehouse stock, commits the budget and re-ranks the plan in Couchbase, and that syncs back to the phone (2 → 8 → 5). |
 
 ### Offline-first production order lifecycle
 
@@ -79,10 +79,10 @@ stateDiagram-v2
   [*] --> OnDevice: release (Couchbase Lite)
   OnDevice --> pending: replicator pushes (connectivity)
   pending --> processing: worker claims it
-  processing --> completed: AOM tools/invoke OK, all materials in warehouse stock
+  processing --> completed: Couchbase Labs Agent Operations Manager tools/invoke OK, all materials in warehouse stock
   processing --> materials_pending: some materials on order (ETA + follow-up date on the card)
-  processing --> awaiting_approval: AOM 202 (budget override, overtime shift)
-  awaiting_approval --> completed: Plant Controller / Plant Manager approves in AOM
+  processing --> awaiting_approval: Couchbase Labs Agent Operations Manager 202 (budget override, overtime shift)
+  awaiting_approval --> completed: Plant Controller / Plant Manager approves in Couchbase Labs Agent Operations Manager
   awaiting_approval --> failed: denied / expired
   processing --> failed: business rule (budget limit, capacity limit, quality hold, unknown material…)
   failed --> OnDevice: "Release as budget override" on the card
@@ -94,7 +94,7 @@ stateDiagram-v2
 
 ## Quick start
 
-### 1. Browser preview in about 2 minutes (no Docker, no AOM)
+### 1. Browser preview in about 2 minutes (no Docker, no Couchbase Labs Agent Operations Manager)
 
 The backend can run on an in-memory store, and the app has a browser preview engine that syncs the same documents over REST. Use this to look at the UX. Couchbase Lite needs a device build (step 3).
 
@@ -106,9 +106,9 @@ uvicorn app.main:app --port 8200                    # STORE_DRIVER=memory by def
 cd mobile && cp .env.example .env && sed -i '' 's/8204/8200/' .env && npm install && npx expo start --web
 ```
 
-### 2. Full stack: Couchbase, Sync Gateway and AOM
+### 2. Full stack: Couchbase, Sync Gateway and Couchbase Labs Agent Operations Manager
 
-You need Docker Desktop, and the Couchbase Agent Operations Manager running on the same machine at `https://localhost:8090`, with its admin password set.
+You need Docker Desktop, and the Couchbase Labs Agent Operations Manager running on the same machine at `https://localhost:8090`, with its admin password set.
 
 ```bash
 cp .env.example .env
@@ -117,7 +117,7 @@ python3 databricks/generate_mock_dump.py   # the export the backend loads
 docker compose up -d --build               # couchbase, init, sync-gateway, sg-init, backend, web
 docker compose logs -f backend             # wait for "Loaded export …: … products"
 
-python3 scripts/register_with_aom.py --admin-password '<AOM admin password>'
+python3 scripts/register_with_aom.py --admin-password '<Couchbase Labs Agent Operations Manager admin password>'
 docker compose up -d --build backend       # picks up AOM_* from .env, publishes the KB, scopes the RAG app
 ```
 
@@ -139,7 +139,7 @@ Then open **https://localhost:5155/story** for the story, **https://localhost:51
 
 Change them with `DEMO_USERNAME` / `DEMO_PASSWORD` in `.env` (Compose) or `web.auth.username` / `web.auth.password` (Helm). The container serves a self-signed certificate it generates on first start, so the browser warns once; add the address people use to `TLS_HOSTS` (Compose) so it is in the certificate, or serve a real one by mounting `tls.crt` / `tls.key` at `/etc/nginx/tls` (Helm: `web.tls.secretName`). Plain `http://` on the same port redirects to HTTPS, and `/signout` ends the session. The sign-in covers the browser UI only: the backend API and Sync Gateway ports are unchanged.
 
-Ports are one above the telecom field service demo's backend, Sync Gateway and console ports (8203 / 4990 / 4991 / 18094), so both stacks can run side by side next to AOM and the other demos. Bucket and Sync Gateway database are `manufacturing`, scope `planning`; container names start with `mfg-`.
+Ports are one above the telecom field service demo's backend, Sync Gateway and console ports (8203 / 4990 / 4991 / 18094), so both stacks can run side by side next to Couchbase Labs Agent Operations Manager and the other demos. Bucket and Sync Gateway database are `manufacturing`, scope `planning`; container names start with `mfg-`.
 
 ### 3. The app on a device with Couchbase Lite
 
@@ -156,14 +156,14 @@ The `web` service serves a prebuilt browser bundle (`web/dist.tgz`). After chang
 
 ### 4. Kubernetes with Helm (K3s / Rancher)
 
-`deploy/k8s/deploy.sh` deploys AOM (**agent-ops**) and this demo (**manufacturing-app**) onto a single-node K3s cluster without a container registry:
+`deploy/k8s/deploy.sh` deploys Couchbase Labs Agent Operations Manager (**agent-ops**) and this demo (**manufacturing-app**) onto a single-node K3s cluster without a container registry:
 
 ```bash
-AOM_ADMIN_PASSWORD='<current AOM password>' ONLY=manufacturing ./deploy/k8s/deploy.sh              # mother
-AOM_ADMIN_PASSWORD='<current AOM password>' TARGET=hal ONLY=manufacturing ./deploy/k8s/deploy.sh   # hal
+AOM_ADMIN_PASSWORD='<current Couchbase Labs Agent Operations Manager password>' ONLY=manufacturing ./deploy/k8s/deploy.sh              # mother
+AOM_ADMIN_PASSWORD='<current Couchbase Labs Agent Operations Manager password>' TARGET=hal ONLY=manufacturing ./deploy/k8s/deploy.sh   # hal
 ```
 
-`deploy/k8s/values-mother.yaml` and `values-hal.yaml` publish it on **5155 / 8204 / 4992**. With `AOM_AUTO_REGISTER=true` the backend registers itself with AOM (MCP server, agent, approval tier, Knowledge Base and RAG application); progress is in `/api/status` under `aom.registration`. A daily CronJob (04:30 America/New_York) drops a new mock export and the backend picks it up within five minutes.
+`deploy/k8s/values-mother.yaml` and `values-hal.yaml` publish it on **5155 / 8204 / 4992**. With `AOM_AUTO_REGISTER=true` the backend registers itself with Couchbase Labs Agent Operations Manager (MCP server, agent, approval tier, Knowledge Base and RAG application); progress is in `/api/status` under `aom.registration`. A daily CronJob (04:30 America/New_York) drops a new mock export and the backend picks it up within five minutes.
 
 ---
 
@@ -172,9 +172,9 @@ AOM_ADMIN_PASSWORD='<current AOM password>' TARGET=hal ONLY=manufacturing ./depl
 1. **Maya Chen** (employee **204817** / **Chen**, Peabody Fluid Power Plant, 5 products to review)
    * *Today*: HP-2200 Hydraulic Gear Pump first, 8:30, A item, **Expedite**, 2 alerts, "Build 1,200 this week (+300 vs schedule)", "Foundry bay - handhelds drop off the network". Open it: line and contacts, the two alerts (demand spike +38%, castings PO 6 days late), this week's schedule (900 scheduled, 1,200 recommended, 1,300 capacity), 12 months of sales and the 8-week forecast with drivers and market signals, 4.2 days of cover against 10, safety stock 480 → 620 recommended, 62% stockout risk, **$15,196 of material budget left**, the briefing.
    * *Profile → No signal* **on**. Back to the pump → **Open production order**: build quantity pre-set to 1,200, 2 alert tasks, a 6-step readiness checklist, 6 materials pre-filled from the model, castings flagged "runs out in ~1d", "Long-lead · 28 days" and "Only 3 on hand - 1 will go on order", total **$18,970.00 - $3,774.00 over the remaining budget**, computed on the phone. Tick the checks, **Release as budget override** → **On device**. Ask the assistant "What needs doing for this product today?" → **Answered on device · Couchbase Lite**.
-   * Switch *No signal* **off**: the order syncs, AOM holds it → **Awaiting approval**. Approve it in AOM → *Approvals*; the card flips to **Materials on order** (one pallet of castings short at the Northeast warehouse - the ETA is on the card), both alerts clear, the schedule shows 1,200, the budget and history update, and the plan no longer lists what was just ordered. In AOM, show the trace and audit entry for `mfg-production-planning::request_budget_override`.
+   * Switch *No signal* **off**: the order syncs, Couchbase Labs Agent Operations Manager holds it → **Awaiting approval**. Approve it in Couchbase Labs Agent Operations Manager → *Approvals*; the card flips to **Materials on order** (one pallet of castings short at the Northeast warehouse - the ETA is on the card), both alerts clear, the schedule shows 1,200, the budget and history update, and the plan no longer lists what was just ordered. In Couchbase Labs Agent Operations Manager, show the trace and audit entry for `mfg-production-planning::request_budget_override`.
    * *MC-480 Motor Controller*: order controller boards ×2 → **Materials on order** (on allocation everywhere). Ask "How does a budget override work?" twice: `Context cache · hit` and `LLM cache · exact hit`. Open **sources**: the playbook.
-2. **Devon Walker** (**318552** / **Walker**, Kingston Molding Plant): asks the same playbook question and gets an **LLM cache exact hit** from Maya's turn, because the playbook namespace is shared and has no product data. At EH-300 Enclosure Housing (press shop, no Wi-Fi) ask "Do I need an overtime shift for this product?" → 5,200 recommended against 4,600 capacity, about 11 hours; request it and the Plant Manager approves it in AOM, then release the full 5,200. Set a standing order for resin at FS-140 Fan Shroud.
+2. **Devon Walker** (**318552** / **Walker**, Kingston Molding Plant): asks the same playbook question and gets an **LLM cache exact hit** from Maya's turn, because the playbook namespace is shared and has no product data. At EH-300 Enclosure Housing (press shop, no Wi-Fi) ask "Do I need an overtime shift for this product?" → 5,200 recommended against 4,600 capacity, about 11 hours; request it and the Plant Manager approves it in Couchbase Labs Agent Operations Manager, then release the full 5,200. Set a standing order for resin at FS-140 Fan Shroud.
 3. **Sofia Alvarez** (**427190** / **Alvarez**, Fort Worth Assembly Plant): three Lone Star Tractor OEM Program products on one key-account contract. HS-612 Heat Shield is on a **quality hold**: the release is refused with `quality_hold` and the assistant steers to logging *on hold*. Log a line check at CV-31 Control Valve Assembly; the stop flips to checked on the floor walk.
 4. Finish on **story chapter 5**: the counters moved because of what you just did, and every one is a Databricks query that didn't run.
 
@@ -210,7 +210,7 @@ Bucket `manufacturing`, scope `planning`. Sync Gateway replicates the first seve
 | `production_plans` | `plan::<product>` | plant | personalization | Schedule vs. model vs. capacity, alert and readiness tasks, materials with warehouse on-hand, budget check, briefing |
 | `production_orders` | `order::<planner>::<uuid>` | planner | **the phone** (create), worker (status) | Offline-first queue for every planning action. The sync function allows `requireUser(planner_id)`, `status: pending` and creation only |
 | `assistant` | `chat::<planner>` | planner | assistant | History + answers reusable offline (keyed by product + question) |
-| `context_cache` | `ctx::<product>::<intent>`, `ctx::<planner>::playbook_<intent>` | plant / planner | assistant | Phone copy of the **Context Cache** entry also held in AOM |
+| `context_cache` | `ctx::<product>::<intent>`, `ctx::<planner>::playbook_<intent>` | plant / planner | assistant | Phone copy of the **Context Cache** entry also held in Couchbase Labs Agent Operations Manager |
 | `catalog` | `catalog::v1` | catalog | loader | Materials, service classes, order types, readiness checklists per line type, warehouses, FAQ |
 | `inventory` | `inv::<warehouse>` | — | actions | On-hand units per material per warehouse (CAS updates). Server only |
 | `lookups` | `login::…`, `kbdoc::…`, `load_state` | — | loader | Login index, KB document ids, load status. Server only |
@@ -230,7 +230,7 @@ Backend variables go in `.env` (see `.env.example`); `docker-compose.yml` sets t
 | `AOM_ADMIN_USERNAME`, `AOM_ADMIN_PASSWORD` | — | Used only to publish KB documents |
 | `KB_WINDOW_DAYS`, `KB_PROFILE_LIMIT` | `7`, `150` | Which products get a KB profile each day |
 | `CONTEXT_CACHE_TTL_SECONDS` | `21600` | Upper bound; the export date and product rev invalidate it sooner |
-| `RAG_APP_ID` | `mfg-planning-assistant` | AOM RAG Application id; `RAG_APP_ENABLED=false` skips it |
+| `RAG_APP_ID` | `mfg-planning-assistant` | Couchbase Labs Agent Operations Manager RAG Application id; `RAG_APP_ENABLED=false` skips it |
 | `DBX_COST_PER_QUERY_USD` | `0.035` | Illustrative cost per warehouse / Model Serving call behind the story's "spend avoided" counter |
 | `DEMO_TODAY` | export's `export_date` | Keeps "today's floor walk" stable whenever you demo |
 | `SG_PUBLIC_URL` | — | Replication URL handed to phones |
@@ -246,7 +246,7 @@ cd backend && pytest -q          # 18 tests
 cd mobile && npm run typecheck
 ```
 
-`test_demo_flows.py` covers the floor walk and plant sync, production plans (schedule vs. model vs. capacity, inventory, alerts first, then the checklist), the budget-limit failure and the override that releases the order, raises the schedule and clears the alerts, short warehouse stock as materials on order, the capacity-limit failure and the overtime shift that lifts it, the assistant's context cache, forecast, inventory and playbook answers, quality holds, plant authorization, standing orders, line checks, supplier returns, push authorization and the Databricks offload counters. `test_aom_integration.py` runs the backend against `tests/fake_aom.py`, which has the same routes and shapes as AOM. `test_aom_bootstrap.py` starts the backend with `AOM_AUTO_REGISTER` against a fresh fake AOM.
+`test_demo_flows.py` covers the floor walk and plant sync, production plans (schedule vs. model vs. capacity, inventory, alerts first, then the checklist), the budget-limit failure and the override that releases the order, raises the schedule and clears the alerts, short warehouse stock as materials on order, the capacity-limit failure and the overtime shift that lifts it, the assistant's context cache, forecast, inventory and playbook answers, quality holds, plant authorization, standing orders, line checks, supplier returns, push authorization and the Databricks offload counters. `test_aom_integration.py` runs the backend against `tests/fake_aom.py`, which has the same routes and shapes as Couchbase Labs Agent Operations Manager. `test_aom_bootstrap.py` starts the backend with `AOM_AUTO_REGISTER` against a fresh fake Couchbase Labs Agent Operations Manager.
 
 ---
 
@@ -257,10 +257,10 @@ backend/            FastAPI API, MCP server, loader, worker, assistant (Python)
   app/catalog.py        materials, line types and readiness checklists, service classes, warehouses, plants (shared with the generator)
   app/personalization.py  the production plan per product: schedule vs. model vs. capacity, tasks, materials to order
   app/actions.py        release / budget / overtime / standing order / supplier return / line check logic behind every tool
-  app/assistant.py      intent → AOM RAG app (playbook) | AOM Context Cache → KB + memory + LLM cache (product) → actions
+  app/assistant.py      intent → Couchbase Labs Agent Operations Manager RAG app (playbook) | Couchbase Labs Agent Operations Manager Context Cache → KB + memory + LLM cache (product) → actions
   app/knowledge.py      the Production Planning Playbook and product profile documents
-  app/loader.py         daily export → Couchbase (products, production plans, floor walks) + AOM Knowledge Base
-  app/worker.py         offline-first production orders → AOM tools/invoke
+  app/loader.py         daily export → Couchbase (products, production plans, floor walks) + Couchbase Labs Agent Operations Manager Knowledge Base
+  app/worker.py         offline-first production orders → Couchbase Labs Agent Operations Manager tools/invoke
 mobile/             Expo app (Couchbase Lite engine + browser preview engine)
 databricks/         mock export generator, PySpark notebook, daily job
 couchbase-init/     bucket / scope / collections / indexes

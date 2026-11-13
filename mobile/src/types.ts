@@ -253,7 +253,7 @@ export type Planner = {
 
 export type RequestStatus = 'pending' | 'processing' | 'awaiting_approval' | 'completed' | 'materials_pending' | 'failed';
 
-/** An offline-first production order or planning action: created on the phone, processed by the backend through AOM. */
+/** An offline-first production order or planning action: created on the phone, processed by the backend through Couchbase Labs Agent Operations Manager. */
 export type ProductionOrderRequest = {
   _id: string;
   type: 'request';

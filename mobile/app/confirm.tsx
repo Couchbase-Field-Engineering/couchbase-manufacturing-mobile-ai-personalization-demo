@@ -9,8 +9,8 @@ import { ProductionOrderTracker } from '@/src/ui/ProductionOrderTracker';
 
 const NEEDS_APPROVAL = new Set(['request_budget_override', 'request_overtime_shift']);
 const BLURB: Record<string, string> = {
-  request_budget_override: 'The Plant Controller reviews budget overrides in the Agent Operations Manager before the production order is released. You\'ll see the decision here.',
-  request_overtime_shift: 'The Plant Manager reviews overtime shifts in the Agent Operations Manager. Once approved, the line\'s capacity for the week goes up and the larger build can be released.',
+  request_budget_override: 'The Plant Controller reviews budget overrides in the Couchbase Labs Agent Operations Manager before the production order is released. You\'ll see the decision here.',
+  request_overtime_shift: 'The Plant Manager reviews overtime shifts in the Couchbase Labs Agent Operations Manager. Once approved, the line\'s capacity for the week goes up and the larger build can be released.',
   set_standing_order: 'The material is ordered automatically on each due date, and drops off the model\'s recommendations.',
   create_supplier_return: 'Creates a supplier return, credits the cost back to the material budget and sets the warehouse dock date five business days out.',
   log_line_check: 'Marks the stop checked on today\'s floor walk and schedules the next plan review.',
