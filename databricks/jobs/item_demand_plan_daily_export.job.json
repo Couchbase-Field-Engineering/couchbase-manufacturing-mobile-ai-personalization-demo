@@ -1,0 +1,52 @@
+{
+  "name": "item_demand_plan_daily_export",
+  "description": "Daily export of the demand and production plan per product (sales history, 8-week forecast, market signals, inventory, schedule, material cover, planning alerts and the demand-planning model's recommendations) for the manufacturing production planning app. Output is picked up by the demo backend, loaded into Couchbase (synced to Couchbase Lite on planners' phones) and published to the Couchbase Agent Operations Manager Knowledge Base. The one scheduled run is the only Databricks compute the app uses.",
+  "schedule": {
+    "quartz_cron_expression": "0 30 4 * * ?",
+    "timezone_id": "America/New_York",
+    "pause_status": "UNPAUSED"
+  },
+  "max_concurrent_runs": 1,
+  "timeout_seconds": 5400,
+  "email_notifications": {
+    "on_failure": [
+      "supply-chain-data-platform@example.com"
+    ]
+  },
+  "tasks": [
+    {
+      "task_key": "export_item_demand_plan",
+      "notebook_task": {
+        "notebook_path": "/Repos/mfg/couchbase-manufacturing-mobile-ai-personalization-demo/databricks/notebooks/item_demand_plan_daily_export",
+        "base_parameters": {
+          "catalog": "mfg_prod",
+          "schema": "planning360",
+          "export_volume": "/Volumes/mfg_prod/planning360/exports/item_demand_plan_daily",
+          "history_production_orders": "12",
+          "num_files": "4"
+        },
+        "source": "WORKSPACE"
+      },
+      "job_cluster_key": "export_cluster",
+      "max_retries": 2,
+      "min_retry_interval_millis": 300000
+    }
+  ],
+  "job_clusters": [
+    {
+      "job_cluster_key": "export_cluster",
+      "new_cluster": {
+        "spark_version": "16.4.x-scala2.12",
+        "node_type_id": "i3.xlarge",
+        "num_workers": 4,
+        "data_security_mode": "SINGLE_USER",
+        "runtime_engine": "PHOTON"
+      }
+    }
+  ],
+  "tags": {
+    "team": "supply-chain-data-platform",
+    "consumer": "mfg-production-planning-app",
+    "demo": "couchbase-aom"
+  }
+}

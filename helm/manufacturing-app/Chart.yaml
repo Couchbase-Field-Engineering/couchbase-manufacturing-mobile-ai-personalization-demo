@@ -1,0 +1,13 @@
+apiVersion: v2
+name: manufacturing-app
+description: >-
+  Couchbase manufacturing demand and production planning demo on Kubernetes: Couchbase Server
+  (products, forecasts and production plans from the daily Databricks export), Sync Gateway (Couchbase Lite
+  replication for planners' phones), the backend (FastAPI + the mfg-production-planning MCP
+  server, which registers itself with the Couchbase Agent Operations Manager),
+  the app in a browser, and a daily CronJob that drops a new mock Databricks
+  export.
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords: [couchbase, couchbase-lite, sync-gateway, mcp, rag, offline-first, databricks]

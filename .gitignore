@@ -1,0 +1,18 @@
+# Local configuration and secrets
+.env
+
+# The generated Databricks export (python3 databricks/generate_mock_dump.py)
+data/databricks-dump/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# Node / Expo (see also mobile/.gitignore)
+node_modules/
+mobile/web-dist/
+
+# macOS
+.DS_Store

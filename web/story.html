@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Production Plan That Doesn't Wait for Wi-Fi · Manufacturing Planning on Couchbase</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg id=%22Layer_1%22 data-name=%22Layer 1%22 xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 270.97 270.97%22%3E %3Cdefs%3E %3Cstyle%3E .cls-1 %7B fill: %23fff%3B %7D .cls-2 %7B fill: %23ec1218%3B %7D %3C/style%3E %3C/defs%3E %3Cg%3E %3Cpath d=%22M1033.93%2C105.34h0c-14.55-7.88-33.28-7.85-47.69.49-3.34%2C1.93-6.48%2C4.39-8.96%2C7.27l-3.29%2C3.84v-61.44h-32.86v158.85h32.83l.09-14.35c3.16%2C4.16%2C6%2C7.29%2C10.07%2C9.88%2C7.14%2C4.55%2C15.18%2C6.69%2C23.75%2C7.1%2C31.14%2C1.47%2C53.82-24.31%2C55.44-54.66%2C1.25-23.32-8.68-45.76-29.38-56.98ZM1001.71%2C187.22c-15.99%2C0-28.95-12.95-28.95-28.95s12.95-28.95%2C28.95-28.95%2C28.94%2C12.96%2C28.94%2C28.95-12.95%2C28.95-28.94%2C28.95Z%22/%3E %3Cpath d=%22M894.38%2C100.27c-17.74-3.12-32.79.89-43.39%2C15.98v-60.76h-33.2v158.85h33.21s0-61.98%2C0-61.98c.76-12.4%2C7.92-22.47%2C20.62-22.66%2C4.7-.07%2C9.25.83%2C12.96%2C3.73%2C3.29%2C2.59%2C5.99%2C6.07%2C6.57%2C10.21l1.11%2C7.7v63.01h33.19v-69.21c-.19-10.23-1.57-19.1-6.92-28-5.34-8.91-13.93-14.88-24.15-16.87Z%22/%3E %3Cpath d=%22M424.21%2C178.18c-8.64%2C3.96-17.78%2C5.78-27.35%2C5.42-18.03-.52-34.7-11.62-41.76-28.12-5.59-13.04-5.6-27.71-.1-40.74%2C6.7-15.87%2C21.07-26.73%2C38.2-28.52%2C16.98-1.77%2C31.31%2C3.62%2C45.11%2C13.75v-36.25l-4.82-2.52-4.24-2c-19.48-9.2-45.43-8.61-65.05.31-19.8%2C9-34.66%2C23.89-42.67%2C44.14-7.26%2C18.36-7.59%2C39.66-1.71%2C58.32%2C5.3%2C16.84%2C15.94%2C31.25%2C30.44%2C41.12%2C2.79%2C1.9%2C5.52%2C3.65%2C8.53%2C5.08l4.87%2C2.31c24.62%2C10.33%2C51.54%2C8.89%2C74.89-4.31h.02l-.03-36.12c-4.9%2C3.26-9.32%2C5.83-14.34%2C8.14Z%22/%3E %3Cpath d=%22M1164.44%2C116.49l-3.64-4.27c-3.87-4.54-9.01-7.51-14.69-9.56-24.8-8.92-50.28%2C1.31-63.17%2C24.27-10.32%2C18.39-10.5%2C42.59-.81%2C61.3%2C12.18%2C23.46%2C38.39%2C34.81%2C63.43%2C25.68%2C7.94-2.89%2C13.86-7.86%2C18.79-14.08h0l.17%2C14.52h32.38v-112.18h-32.4l-.07%2C14.33ZM1136.76%2C187.21c-15.98%2C0-28.94-12.95-28.94-28.95s12.95-28.95%2C28.94-28.95%2C28.95%2C12.96%2C28.95%2C28.95-12.95%2C28.95-28.95%2C28.95Z%22/%3E %3Cpath d=%22M514.74%2C98.13c-33.22%2C0-60.14%2C26.93-60.14%2C60.14s26.92%2C60.14%2C60.14%2C60.14%2C60.14-26.93%2C60.14-60.14-26.93-60.14-60.14-60.14ZM514.73%2C186.73c-15.72%2C0-28.46-12.74-28.46-28.46s12.74-28.46%2C28.46-28.46%2C28.46%2C12.74%2C28.46%2C28.46-12.74%2C28.46-28.46%2C28.46Z%22/%3E %3Cpath d=%22M1428.87%2C128.52c-4.99-10.21-15.77-20.65-26.2-24.56l-5.18-1.93c-26.4-7.87-54.49%2C1.15-68.69%2C25.27l-3.42%2C6.82c-3.83%2C9.06-5.14%2C18.68-4.54%2C28.58%2C1.31%2C22.03%2C13.66%2C41.38%2C34.14%2C49.81%2C13.18%2C5.43%2C28.17%2C6.05%2C42.01%2C2.86%2C15.68-3.94%2C27.79-13.59%2C35.19-27.84l-28.07-11.13c-4.47%2C7.46-10.51%2C12.48-19.39%2C13.35h0c-5.19.57-10.16.52-14.66-1.55l-3.94-1.82-4.48-3.03c-4.13-2.8-8.26-10.07-8.47-15.98h82.41c1.32-13.45-.5-26.86-6.72-38.85ZM1403.45%2C145.83s0%2C0%2C0%2C0l-49.96.02c.99-8.37%2C6.92-14.84%2C14.67-18.47%2C6.89-3.24%2C15.56-2.8%2C22.51.42%2C2.93%2C1.36%2C5.26%2C3.51%2C7.51%2C5.79%2C2.86%2C3.33%2C4.53%2C6.97%2C5.27%2C12.24h0Z%22/%3E %3Cpolygon points=%221407.45 145.83 1407.45 145.82 1407.45 145.82 1407.45 145.83%22/%3E %3Cpath d=%22M664.35%2C161.76c-.16%2C10.07-3.48%2C19.7-12.85%2C23.59-3.55%2C1.47-7.36%2C1.71-11.18%2C1.32-11.47-1.17-16.54-11.21-16.67-22.42v-62.09h-33.09v71.54c.41%2C13.41%2C4.41%2C26.53%2C14.75%2C35.05%2C3.61%2C2.97%2C7.52%2C5.18%2C12.06%2C6.51%2C8.38%2C2.45%2C17.26%2C2.78%2C25.71.53%2C8.97-2.39%2C15.87-7.8%2C21.18-15.48l.13%2C14.03h33.07v-112.18h0s-33.11%2C0-33.11%2C0v59.6Z%22/%3E %3Cpath d=%22M1273.52%2C145.9l-16.5-4.34c-1.21-.32-2.98-1.42-4.01-2.08-2.38-1.53-3.41-3.85-3.22-6.52.15-2.29%2C1.72-4.47%2C4.04-5.72%2C10.07-4.48%2C20.17%2C2.74%2C24.08%2C12.42l26.91-14.27c-4.68-10.33-13.69-17.77-23.85-21.88l-9.63-3.08c-14.23-3.03-31.37-.23-42.53%2C9.31-7.35%2C6.27-11.49%2C15-11.74%2C24.72-.51%2C20.54%2C12.55%2C30.85%2C31.37%2C35.49l15.98%2C3.94c2.78.69%2C6.5%2C2.82%2C7.47%2C5.37%2C1.54%2C4.04-.68%2C8.37-4.84%2C9.84-11.29%2C4.06-22.36-3.12-27.28-14.03l-26.84%2C14.78c4.82%2C10.7%2C12.34%2C17.76%2C22.86%2C22.64%2C13.24%2C5.71%2C29.9%2C6.44%2C43.2%2C1.76%2C15.43-5.44%2C26.25-18.03%2C26.55-34.75.15-7.62-2.36-14.64-7.51-20.28-6.41-7.03-15.3-10.87-24.51-13.3Z%22/%3E %3Cpath d=%22M794.59%2C183.23c-17.04%2C8.68-39.52%2C3.32-45.72-15.11-4.79-14.22%2C1.09-30%2C15.27-36.16%2C12.67-5.32%2C26.77-2.54%2C37.81%2C5.52v-31.22c-13.9-8.07-32.93-8.72-48.14-4.04-19.71%2C6.17-34.19%2C22.1-38.46%2C42.24-4.36%2C20.54.97%2C43.78%2C16.92%2C57.93%2C14.92%2C13.25%2C34.94%2C17.31%2C54.4%2C13.47%2C5.53-1.09%2C10.48-3.07%2C15.51-5.86l-.02-31.04-7.56%2C4.27Z%22/%3E %3C/g%3E %3Cg%3E %3Ccircle class=%22cls-2%22 cx=%22135.48%22 cy=%22135.48%22 r=%22135.48%22/%3E %3Cpath class=%22cls-1%22 d=%22M54.17%2C102.96h32.52v32.52h97.57v-32.52h32.52v65.05H54.17v-65.05Z%22/%3E %3C/g%3E %3C/svg%3E">
+<style>
+  :root {
+    --red: #ea2328; --red-dark: #b8141a; --ink: #14151a; --ink-2: #454853; --ink-3: #868994;
+    --paper: #ffffff; --paper-2: #f3f4f6; --line: #e3e5ea; --ok: #12805c; --warn: #a85d00; --bad: #b8141a;
+    --dbx: #ff3621; --cb: #ea2328; --cb-dark: #a40e14;
+    --shadow: 0 10px 30px rgba(0,0,0,.08);
+  }
+  html.dark {
+    --ink: #f3f3f4; --ink-2: #c7c9d1; --ink-3: #8e919c; --paper: #0b0c10; --paper-2: #17181e; --line: #2a2c35;
+    --shadow: 0 10px 30px rgba(0,0,0,.5);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); background: var(--paper); }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--paper); z-index: 5; }
+  .wordmark { display: flex; align-items: center; gap: 14px; }
+  .wordmark svg { height: 26px; width: auto; display: block; }
+  .wordmark svg path:not([class]) { fill: var(--ink); }
+  .wordmark small { color: var(--ink-3); font-weight: 600; font-size: 13px; border-left: 1px solid var(--line); padding-left: 14px; }
+  .controls { display: flex; gap: 8px; align-items: center; color: var(--ink-3); font-size: 13px; }
+  button { font: inherit; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 8px; padding: 7px 12px; cursor: pointer; }
+  button.primary { background: var(--red); color: #fff; border-color: var(--red); font-weight: 600; }
+  button:hover { border-color: var(--ink-3); }
+  main { max-width: 1080px; margin: 0 auto; padding: 36px 28px 120px; }
+  section.chapter { display: none; animation: fade .35s ease; }
+  section.chapter.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: none; } }
+  .kicker { text-transform: uppercase; letter-spacing: .14em; font-size: 12px; color: var(--red); font-weight: 700; }
+  h1 { font-size: 44px; line-height: 1.05; letter-spacing: -.03em; margin: 8px 0 14px; }
+  h2 { font-size: 30px; letter-spacing: -.02em; margin: 6px 0 10px; }
+  h3 { font-size: 17px; margin: 0 0 6px; }
+  p.lead { font-size: 19px; color: var(--ink-2); max-width: 760px; line-height: 1.45; }
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); } .g3 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); }
+  .card { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .card .big { font-size: 34px; font-weight: 800; letter-spacing: -.02em; }
+  .card .sub { color: var(--ink-3); font-size: 13px; margin-top: 4px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); color: var(--ink-2); }
+  .tag.red { background: var(--red); color: #fff; border-color: var(--red); }
+  .tag.ok { color: var(--ok); } .tag.bad { color: var(--bad); } .tag.warn { color: var(--warn); }
+  .notes { margin-top: 26px; border-left: 3px solid var(--red); padding: 10px 16px; color: var(--ink-2); background: var(--paper-2); border-radius: 0 10px 10px 0; display: none; }
+  html.notes .notes { display: block; }
+  .scene { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: start; }
+  ul.clean { padding-left: 18px; color: var(--ink-2); line-height: 1.55; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--ink-3); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+  td.cb { color: var(--ok); font-weight: 600; }
+  .phones { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .phone { border: 1px solid var(--line); border-radius: 26px; padding: 14px; background: var(--paper-2); min-height: 420px; box-shadow: var(--shadow); }
+  .phone .bar { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-3); margin-bottom: 10px; }
+  .phone h4 { margin: 0 0 8px; font-size: 15px; }
+  .row { display: flex; justify-content: space-between; align-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; margin: 6px 0; font-size: 13px; }
+  .row .money { font-weight: 700; }
+  .status { margin-top: 10px; padding: 10px 12px; border-radius: 10px; font-size: 13px; font-weight: 600; }
+  .status.ok { background: rgba(26,127,75,.12); color: var(--ok); } .status.bad { background: rgba(180,35,24,.12); color: var(--bad); }
+  .status.wait { background: rgba(183,121,31,.14); color: var(--warn); } .status.muted { background: var(--paper); color: var(--ink-3); border: 1px dashed var(--line); }
+  .stepper { display: flex; gap: 10px; align-items: center; margin: 14px 0 18px; }
+  .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; align-items: stretch; }
+  .node { border: 1px solid var(--line); background: var(--paper-2); border-radius: 12px; padding: 12px; font-size: 13px; min-height: 92px; position: relative; }
+  .node b { display: block; font-size: 14px; margin-bottom: 4px; }
+  .node.dbx { border-color: var(--dbx); } .node.cb { border-color: var(--cb); } .node.aom { border-color: #5b5bd6; }
+  .node .cost { display: block; margin-top: 8px; font-size: 11px; font-weight: 700; color: var(--dbx); text-transform: uppercase; letter-spacing: .06em; }
+  .node .cost.ok { color: var(--ok); }
+  .meter { height: 12px; border-radius: 999px; background: var(--paper-2); border: 1px solid var(--line); overflow: hidden; margin-top: 8px; }
+  .meter > div { height: 100%; background: var(--dbx); transition: width .8s ease; }
+  .meter.ok > div { background: var(--ok); }
+  .legend { font-size: 12px; color: var(--ink-3); margin-top: 6px; }
+  footer.nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--paper); border-top: 1px solid var(--line); padding: 10px 28px; display: flex; justify-content: space-between; align-items: center; }
+  .dots { display: flex; gap: 6px; } .dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--line); } .dots span.on { background: var(--red); }
+  kbd { font: 11px/1 ui-monospace, Menlo, monospace; background: var(--paper-2); border: 1px solid var(--line); border-radius: 5px; padding: 3px 5px; color: var(--ink-2); }
+  a { color: var(--red); font-weight: 600; text-decoration: none; } a:hover { text-decoration: underline; }
+  .live { font-variant-numeric: tabular-nums; }
+  .pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  @media (max-width: 860px) { .scene, .phones, .g2, .g3, .g4 { grid-template-columns: 1fr; } .flow { grid-template-columns: 1fr 1fr; } h1 { font-size: 34px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark"><svg role="img" aria-label="Couchbase" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1436 270.97">
+  <defs>
+    <style>
+      .cbl-1 {
+        fill: #fff;
+      }
+
+      .cbl-2 {
+        fill: #ec1218;
+      }
+    </style>
+  </defs>
+  <g>
+    <path d="M1033.93,105.34h0c-14.55-7.88-33.28-7.85-47.69.49-3.34,1.93-6.48,4.39-8.96,7.27l-3.29,3.84v-61.44h-32.86v158.85h32.83l.09-14.35c3.16,4.16,6,7.29,10.07,9.88,7.14,4.55,15.18,6.69,23.75,7.1,31.14,1.47,53.82-24.31,55.44-54.66,1.25-23.32-8.68-45.76-29.38-56.98ZM1001.71,187.22c-15.99,0-28.95-12.95-28.95-28.95s12.95-28.95,28.95-28.95,28.94,12.96,28.94,28.95-12.95,28.95-28.94,28.95Z"/>
+    <path d="M894.38,100.27c-17.74-3.12-32.79.89-43.39,15.98v-60.76h-33.2v158.85h33.21s0-61.98,0-61.98c.76-12.4,7.92-22.47,20.62-22.66,4.7-.07,9.25.83,12.96,3.73,3.29,2.59,5.99,6.07,6.57,10.21l1.11,7.7v63.01h33.19v-69.21c-.19-10.23-1.57-19.1-6.92-28-5.34-8.91-13.93-14.88-24.15-16.87Z"/>
+    <path d="M424.21,178.18c-8.64,3.96-17.78,5.78-27.35,5.42-18.03-.52-34.7-11.62-41.76-28.12-5.59-13.04-5.6-27.71-.1-40.74,6.7-15.87,21.07-26.73,38.2-28.52,16.98-1.77,31.31,3.62,45.11,13.75v-36.25l-4.82-2.52-4.24-2c-19.48-9.2-45.43-8.61-65.05.31-19.8,9-34.66,23.89-42.67,44.14-7.26,18.36-7.59,39.66-1.71,58.32,5.3,16.84,15.94,31.25,30.44,41.12,2.79,1.9,5.52,3.65,8.53,5.08l4.87,2.31c24.62,10.33,51.54,8.89,74.89-4.31h.02l-.03-36.12c-4.9,3.26-9.32,5.83-14.34,8.14Z"/>
+    <path d="M1164.44,116.49l-3.64-4.27c-3.87-4.54-9.01-7.51-14.69-9.56-24.8-8.92-50.28,1.31-63.17,24.27-10.32,18.39-10.5,42.59-.81,61.3,12.18,23.46,38.39,34.81,63.43,25.68,7.94-2.89,13.86-7.86,18.79-14.08h0l.17,14.52h32.38v-112.18h-32.4l-.07,14.33ZM1136.76,187.21c-15.98,0-28.94-12.95-28.94-28.95s12.95-28.95,28.94-28.95,28.95,12.96,28.95,28.95-12.95,28.95-28.95,28.95Z"/>
+    <path d="M514.74,98.13c-33.22,0-60.14,26.93-60.14,60.14s26.92,60.14,60.14,60.14,60.14-26.93,60.14-60.14-26.93-60.14-60.14-60.14ZM514.73,186.73c-15.72,0-28.46-12.74-28.46-28.46s12.74-28.46,28.46-28.46,28.46,12.74,28.46,28.46-12.74,28.46-28.46,28.46Z"/>
+    <path d="M1428.87,128.52c-4.99-10.21-15.77-20.65-26.2-24.56l-5.18-1.93c-26.4-7.87-54.49,1.15-68.69,25.27l-3.42,6.82c-3.83,9.06-5.14,18.68-4.54,28.58,1.31,22.03,13.66,41.38,34.14,49.81,13.18,5.43,28.17,6.05,42.01,2.86,15.68-3.94,27.79-13.59,35.19-27.84l-28.07-11.13c-4.47,7.46-10.51,12.48-19.39,13.35h0c-5.19.57-10.16.52-14.66-1.55l-3.94-1.82-4.48-3.03c-4.13-2.8-8.26-10.07-8.47-15.98h82.41c1.32-13.45-.5-26.86-6.72-38.85ZM1403.45,145.83s0,0,0,0l-49.96.02c.99-8.37,6.92-14.84,14.67-18.47,6.89-3.24,15.56-2.8,22.51.42,2.93,1.36,5.26,3.51,7.51,5.79,2.86,3.33,4.53,6.97,5.27,12.24h0Z"/>
+    <polygon points="1407.45 145.83 1407.45 145.82 1407.45 145.82 1407.45 145.83"/>
+    <path d="M664.35,161.76c-.16,10.07-3.48,19.7-12.85,23.59-3.55,1.47-7.36,1.71-11.18,1.32-11.47-1.17-16.54-11.21-16.67-22.42v-62.09h-33.09v71.54c.41,13.41,4.41,26.53,14.75,35.05,3.61,2.97,7.52,5.18,12.06,6.51,8.38,2.45,17.26,2.78,25.71.53,8.97-2.39,15.87-7.8,21.18-15.48l.13,14.03h33.07v-112.18h0s-33.11,0-33.11,0v59.6Z"/>
+    <path d="M1273.52,145.9l-16.5-4.34c-1.21-.32-2.98-1.42-4.01-2.08-2.38-1.53-3.41-3.85-3.22-6.52.15-2.29,1.72-4.47,4.04-5.72,10.07-4.48,20.17,2.74,24.08,12.42l26.91-14.27c-4.68-10.33-13.69-17.77-23.85-21.88l-9.63-3.08c-14.23-3.03-31.37-.23-42.53,9.31-7.35,6.27-11.49,15-11.74,24.72-.51,20.54,12.55,30.85,31.37,35.49l15.98,3.94c2.78.69,6.5,2.82,7.47,5.37,1.54,4.04-.68,8.37-4.84,9.84-11.29,4.06-22.36-3.12-27.28-14.03l-26.84,14.78c4.82,10.7,12.34,17.76,22.86,22.64,13.24,5.71,29.9,6.44,43.2,1.76,15.43-5.44,26.25-18.03,26.55-34.75.15-7.62-2.36-14.64-7.51-20.28-6.41-7.03-15.3-10.87-24.51-13.3Z"/>
+    <path d="M794.59,183.23c-17.04,8.68-39.52,3.32-45.72-15.11-4.79-14.22,1.09-30,15.27-36.16,12.67-5.32,26.77-2.54,37.81,5.52v-31.22c-13.9-8.07-32.93-8.72-48.14-4.04-19.71,6.17-34.19,22.1-38.46,42.24-4.36,20.54.97,43.78,16.92,57.93,14.92,13.25,34.94,17.31,54.4,13.47,5.53-1.09,10.48-3.07,15.51-5.86l-.02-31.04-7.56,4.27Z"/>
+  </g>
+  <g>
+    <circle class="cbl-2" cx="135.48" cy="135.48" r="135.48"/>
+    <path class="cbl-1" d="M54.17,102.96h32.52v32.52h97.57v-32.52h32.52v65.05H54.17v-65.05Z"/>
+  </g>
+</svg><small>Demand &amp; Production Planning · demo</small></div>
+  <div class="controls">
+    <span><kbd>←</kbd> <kbd>→</kbd> chapters · <kbd>N</kbd> notes · <kbd>T</kbd> transform · <kbd>Space</kbd> step</span>
+    <button id="notesBtn" title="Talking points (N)">N</button>
+    <button id="darkBtn" title="Dark mode">☾</button>
+    <a href="/" style="margin-left:6px"><button class="primary">Open the app →</button></a>
+  </div>
+</header>
+
+<main>
+
+<!-- 1 -->
+<section class="chapter active" data-title="A day on the floor">
+  <div class="kicker">Chapter 1 · A day on the floor</div>
+  <h1>A production plan that doesn't wait for Wi-Fi.</h1>
+  <p class="lead">Every night an AI model reads historical sales, market trends and supply chain data and works out what each line should build, how much inventory each product should carry and which materials to order. The planner who has to act on it does so on the shop floor, next to the line - which is exactly where a phone doesn't work.</p>
+  <div class="grid g3" style="margin-top:22px">
+    <div class="card"><h3>Press shops</h3><p class="sub">A steel building full of 400-ton presses. The plant Wi-Fi was engineered for scanners at the dock doors, not for the middle of the press line.</p></div>
+    <div class="card"><h3>Foundry and machining bays</h3><p class="sub">Castings stage between furnaces and CNC cells. Handhelds drop off the network every time a crane passes.</p></div>
+    <div class="card"><h3>Paint and coating booths</h3><p class="sub">Shielded, sealed and grounded. Nothing gets in or out, including LTE.</p></div>
+    <div class="card"><h3>Mezzanine stores</h3><p class="sub">The tool crib and the kitting racks sit on a steel deck above the floor - a dead zone by design.</p></div>
+    <div class="card"><h3>Cold docks and yards</h3><p class="sub">Receiving happens past the dock doors, where coverage stops and the late truck is.</p></div>
+    <div class="card"><h3>The walk between them</h3><p class="sub">A planner reviews two dozen products a day with supervisors, at the line. Back at the desk is too late to change today's sequence.</p></div>
+  </div>
+  <div class="card" style="margin-top:22px; border-left: 4px solid var(--red)">
+    <h3>Friday, 8:30 am - HP-2200 Hydraulic Gear Pump, Line 3 · CNC Cell B, Peabody MA</h3>
+    <p class="sub" style="font-size:15px; color:var(--ink-2)">Maya Chen is standing in the foundry bay with the cell supervisor. Two alerts are open: distributor orders are running 38% over forecast, and the castings PO is six days late. The app already knows all of this - the demand-planning scores landed on her phone at 5 am, with a production plan: build <b>1,200</b> pumps this week instead of the 900 scheduled, because cover is 4.2 days against a 10-day target, and order six materials. Four pallets of castings and the rest come to <b>$18,970</b>, which the app tells her is <b>$3,774 over what's left of the product's quarterly material budget</b>, and that the warehouse only has three of the four pallets. She walks the readiness checklist with the supervisor and releases it as a budget override with a reason. The phone says <b>On device</b>. Twenty minutes later, at the cell door, it says <b>Awaiting approval</b> - and by the time she reaches the SMT line, <b>Production order PRO-261113-… released: 1,200 units, both alerts cleared, one pallet of castings on order</b>. She never had signal at the line and never needed it.</p>
+  </div>
+  <div class="notes"><b>Talking points.</b> Production planning is an offline problem first and an AI problem second. The forecast, the schedule, the inventory position and the material plan are on the phone before the planner reaches the line; nothing on the floor waits on a network. The AI assistant and the governance come along for free once the data plane is right.</div>
+</section>
+
+<!-- 2 -->
+<section class="chapter" data-title="What the app needs">
+  <div class="kicker">Chapter 2 · What the app needs</div>
+  <h2>Three decisions from the model. Eight requirements to act on them.</h2>
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><span class="tag red">Factory schedules</span><h3 style="margin-top:8px">How much to build this week</h3><p class="sub">The 8-week forecast from sales history, the order book and market signals becomes a recommended build quantity, checked against the line's capacity. Over capacity means an overtime shift the Plant Manager approves.</p></div>
+    <div class="card"><span class="tag red">Inventory levels</span><h3 style="margin-top:8px">How much to carry</h3><p class="sub">Days of finished-goods cover against the service class's target, and a recommended safety stock that moves with forecast error and demand trend.</p></div>
+    <div class="card"><span class="tag red">Material ordering</span><h3 style="margin-top:8px">What to order, and when</h3><p class="sub">Days-to-stockout per material from usage and open POs, supplier lead times, commodity indexes for forward buys - checked against warehouse stock and the material budget.</p></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">
+      <span class="tag red">On the phone</span>
+      <ul class="clean">
+        <li><b>Every product in the plant, on device.</b> Forecast, inventory, this week's schedule, alerts, material cover, budget, order history and the model's production plan - before the planner reaches the line.</li>
+        <li><b>Schedule and materials in one production order, with no signal.</b> Build quantity, readiness checklist, material costing, the capacity check and the budget check all compute locally.</li>
+        <li><b>Sync when the network comes back.</b> Production orders go up; releases, materials on order and approvals come down, to the same card the planner tapped.</li>
+        <li><b>One source of truth per plant.</b> Two planners can't claim the same last pallet of castings; a product has one schedule, one budget and one alert list.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag">For the AI - and the data platform</span>
+      <ul class="clean">
+        <li><b>Grounded in today's export,</b> and only in this product's profile - never another product's, never another plant's.</li>
+        <li><b>Repeat questions are cheap.</b> The second planner to ask "how is safety stock set?" costs nothing; the same product question twice costs nothing.</li>
+        <li><b>Actions are governed.</b> Production orders, budget overrides and overtime shifts run as audited tool calls; overrides wait for the Plant Controller and overtime waits for the Plant Manager.</li>
+        <li><b>The Databricks bill doesn't grow per tap.</b> One scheduled job a day. No warehouse query per screen, no Model Serving call per product.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="notes"><b>Talking points.</b> The last requirement is the one the data platform team cares about. Databricks is excellent at producing the forecast and the plan from years of sales, supplier and market data. It is an expensive place to <i>serve</i> them from, 150,000 times a day, to phones that are half the time offline.</div>
+</section>
+
+<!-- 3 -->
+<section class="chapter" data-title="The Databricks bill">
+  <div class="kicker">Chapter 3 · How it usually gets built</div>
+  <h2 id="ch3title">Every screen is a warehouse query.</h2>
+  <p class="lead" id="ch3lead"></p>
+  <div class="stepper"><button class="primary" id="transformBtn">Transform the stack (T)</button><span class="legend" id="transformHint">Press to move the per-request load onto the Couchbase data plane.</span></div>
+  <div class="flow" id="flow"></div>
+  <div class="grid g2" style="margin-top:22px">
+    <div class="card">
+      <h3 id="meterTitle">Warehouse queries per day</h3>
+      <div class="big live" id="qpd">144,000</div>
+      <div class="meter" id="meter"><div style="width:100%"></div></div>
+      <div class="legend" id="meterLegend"></div>
+    </div>
+    <div class="card">
+      <h3>What changes</h3>
+      <ul class="clean" id="changeList"></ul>
+    </div>
+  </div>
+  <div class="notes"><b>Talking points.</b> Press <kbd>T</kbd>. Databricks keeps the job it is good at - forecasting demand and scoring every product once a night. Couchbase takes the serving: the export lands in Couchbase Server, Sync Gateway pushes each plant to its planner's Couchbase Lite, and the assistant reads from the Context Cache and Couchbase rather than re-querying the warehouse. The warehouse can auto-stop at 5:30 am.</div>
+</section>
+
+<!-- 4 -->
+<section class="chapter" data-title="Offline-first, step by step">
+  <div class="kicker">Chapter 4 · Offline-first, step by step</div>
+  <h2>The same production order, two phones, one foundry bay.</h2>
+  <div class="stepper"><button class="primary" id="stepBtn">Next step (Space)</button><button id="resetBtn">Reset</button><span class="legend" id="stepLabel">Step 0 of 5</span></div>
+  <div class="phones">
+    <div class="phone">
+      <div class="bar"><span>Couchbase Lite · <span id="sigA">no signal</span></span><span>8:31</span></div>
+      <h4>HP-2200 Hydraulic Gear Pump · A item</h4>
+      <div id="phoneA"></div>
+    </div>
+    <div class="phone">
+      <div class="bar"><span>Online-only app · <span id="sigB">no signal</span></span><span>8:31</span></div>
+      <h4>HP-2200 Hydraulic Gear Pump</h4>
+      <div id="phoneB"></div>
+    </div>
+  </div>
+  <div class="notes"><b>Talking points.</b> On the left every screen renders from the on-device database; the production order is a document written to Couchbase Lite and pushed by the replicator when connectivity returns. On the right, the product screen is a warehouse query that can't run, and the release is a POST that fails. The clipboard comes out; the plan is re-keyed after lunch - and the warehouse query runs then anyway, half a shift late.</div>
+</section>
+
+<!-- 5 -->
+<section class="chapter" data-title="One data plane for the AI">
+  <div class="kicker">Chapter 5 · One data plane for the AI</div>
+  <h2>Databricks produces. Couchbase serves. AOM governs.</h2>
+  <div class="flow" style="grid-template-columns: repeat(4, 1fr)">
+    <div class="node dbx"><b>Databricks · 4:30 am</b>One job: sales, market and supply chain joins, the demand-planning model, JSON export. Then the warehouse stops.<span class="cost ok">1 run / day</span></div>
+    <div class="node cb"><b>Couchbase Server</b>Products, forecasts, production plans, materials catalog, warehouse stock. The assistant's Context Cache copy lives here too.<span class="cost ok">serves all day</span></div>
+    <div class="node aom"><b>Agent Operations Manager</b>Knowledge Base (playbook + product profiles), RAG app, Context Cache, LLM cache, tool governance, approvals.<span class="cost ok">cache first</span></div>
+    <div class="node cb"><b>Couchbase Lite</b>One plant per phone through Sync Gateway. Production orders written here, synced later.<span class="cost ok">offline</span></div>
+  </div>
+  <div class="grid g4" style="margin-top:22px" id="liveCards">
+    <div class="card"><div class="sub">Warehouse queries avoided</div><div class="big live" id="m_wq">-</div><div class="sub">served from Couchbase / Couchbase Lite instead</div></div>
+    <div class="card"><div class="sub">Est. Databricks spend avoided</div><div class="big live" id="m_usd">-</div><div class="sub">at <span id="m_rate">-</span> per warehouse / serving call (set DBX_COST_PER_QUERY_USD)</div></div>
+    <div class="card"><div class="sub">Context Cache hit rate</div><div class="big live" id="m_ctx">-</div><div class="sub">AOM Context Cache · <span id="m_turns">-</span> assistant turns</div></div>
+    <div class="card"><div class="sub">LLM cache hit rate</div><div class="big live" id="m_llm">-</div><div class="sub">exact + semantic hits across planners</div></div>
+    <div class="card"><div class="sub">Production orders captured</div><div class="big live" id="m_orders">-</div><div class="sub"><span id="m_offline">-</span> queued offline first · <span id="m_value">-</span> of materials</div></div>
+    <div class="card"><div class="sub">Awaiting approval</div><div class="big live" id="m_appr">-</div><div class="sub">budget overrides &amp; overtime shifts held by AOM</div></div>
+    <div class="card"><div class="sub">Export loaded</div><div class="big live" id="m_export">-</div><div class="sub"><span id="m_rows">-</span> products · <span id="m_planners">-</span> planners</div></div>
+    <div class="card"><div class="sub">Model Serving calls avoided</div><div class="big live" id="m_ms">-</div><div class="sub">forecast read from the export, not scored live</div></div>
+  </div>
+  <p class="legend" id="liveNote" style="margin-top:10px">Live from <code>/api/status</code>. Use the app and watch these move.</p>
+  <div class="notes"><b>Talking points.</b> Two caches, two bills. AOM's <b>Context Cache</b> keeps the assembled product context (profile chunks + production plan + alerts + budget) keyed by export date and product revision, so the second question about a product never re-reads the warehouse <i>or</i> Couchbase. AOM's <b>LLM cache</b> makes the second planner's identical playbook question free. Every number here is a Databricks query that didn't run.</div>
+</section>
+
+<!-- 6 -->
+<section class="chapter" data-title="Where the Databricks money goes">
+  <div class="kicker">Chapter 6 · Where the Databricks money goes</div>
+  <h2>Per-request serving vs. nightly export + Couchbase.</h2>
+  <table style="margin-top:14px">
+    <thead><tr><th></th><th>Serve from Databricks per request</th><th>Export nightly, serve from Couchbase</th></tr></thead>
+    <tbody>
+      <tr><td><b>SQL warehouse uptime</b></td><td>Warm across all three shifts, sized for the morning planning peak</td><td class="cb">One scheduled job, ~20 min, then auto-stop</td></tr>
+      <tr><td><b>Warehouse queries</b></td><td>~15 per product review × every review (forecast, inventory, schedule, alerts, history, materials)</td><td class="cb">0 during the day; the export is read once into Couchbase</td></tr>
+      <tr><td><b>Model Serving</b></td><td>Forecast and plan scored per request; endpoint kept hot</td><td class="cb">Scored once in the job; results travel with the export</td></tr>
+      <tr><td><b>Assistant context</b></td><td>Fresh warehouse reads for every question</td><td class="cb">AOM Context Cache + Couchbase copy, invalidated by export date / product rev</td></tr>
+      <tr><td><b>LLM tokens</b></td><td>Every planner's "how is…?" is a new call</td><td class="cb">LLM cache: exact and semantic hits across planners</td></tr>
+      <tr><td><b>No signal</b></td><td>No product screen, no release - a clipboard and a re-key</td><td class="cb">Everything renders and production orders are captured from Couchbase Lite</td></tr>
+      <tr><td><b>Governance</b></td><td>Each team wires its own approvals and audit</td><td class="cb">AOM: RBAC, tool scope, approvals, traces, audit for every action</td></tr>
+      <tr><td><b>Freshness</b></td><td>Live - but a planner works from this morning's plan</td><td class="cb">This morning's export + live release, stock and schedule state carried forward in Couchbase</td></tr>
+    </tbody>
+  </table>
+  <div class="notes"><b>Talking points.</b> This is not "Couchbase instead of Databricks." It's Databricks for what it's for - the nightly join, the forecast and the optimization - and Couchbase for the 150,000 reads a day that follow. Set <code>DBX_COST_PER_QUERY_USD</code> to the customer's blended per-query figure and the previous chapter shows the number in dollars.</div>
+</section>
+
+<!-- 7 -->
+<section class="chapter" data-title="See it run">
+  <div class="kicker">Chapter 7 · See it run</div>
+  <h2>Ten minutes, three planners.</h2>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">
+      <h3>Open</h3>
+      <ul class="clean">
+        <li><a href="/">The app</a> - sign in as a demo planner (employee ID + last name are on the sign-in screen)</li>
+        <li><a id="aomLink" href="#" target="_blank">AOM dashboard</a> - Agents, Servers, Knowledge, Context Cache, RAG Applications, Approvals, Traces</li>
+        <li><a href="/api/status" target="_blank">/api/status</a> - export load, KB publishing, Databricks offload counters</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Script</h3>
+      <ol class="clean" style="padding-left:20px">
+        <li><b>Maya Chen (204817 / Chen).</b> Today → HP-2200 Hydraulic Gear Pump. Two alerts, 12 months of sales and the 8-week forecast, 4.2 days of cover, build 1,200 vs 900 scheduled. Turn on <i>Profile → No signal</i>. Open the production order, tick the checks, release as a budget override: <b>On device</b>. Ask the assistant "what needs doing for this product today?" → answered on device. Turn signal back on → <b>Awaiting approval</b>. Approve in AOM → <b>Materials on order</b> (one pallet of castings short at the Northeast warehouse, ETA on the card); both alerts clear and the schedule shows 1,200.</li>
+        <li><b>MC-480 Motor Controller.</b> Two trays of controller boards: <b>Materials on order</b>, the boards are on allocation. Ask "how does a budget override work?" twice - second time <i>LLM cache · exact hit</i>.</li>
+        <li><b>Devon Walker (318552 / Walker).</b> EH-300 Enclosure Housing in the press shop. Ask the same playbook question → cache hit from Maya's turn. Ask "do I need an overtime shift for this product?" → 5,200 recommended against 4,600 capacity, request 11 hours; the Plant Manager approves it in AOM and the full build can be released.</li>
+        <li><b>Sofia Alvarez (427190 / Alvarez).</b> Lone Star Tractor OEM Program: 12 products on one key-account contract. HS-612 Heat Shield is on a quality hold - the release is refused and the assistant steers to logging "on hold". Log a line check on CV-31; the stop flips to checked.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="notes"><b>Talking points.</b> Finish on Chapter 5: the counters moved because of what you just did, and every one of them is a query Databricks didn't run.</div>
+</section>
+
+</main>
+
+<footer class="nav">
+  <button id="prevBtn">← Previous</button>
+  <div style="display:flex; align-items:center; gap:14px"><div class="dots" id="dots"></div><span class="legend" id="navTitle"></span></div>
+  <button id="nextBtn" class="primary">Next →</button>
+</footer>
+
+<script>
+(function () {
+  const chapters = [...document.querySelectorAll('section.chapter')];
+  let idx = 0;
+  const dots = document.getElementById('dots');
+  chapters.forEach(() => dots.appendChild(document.createElement('span')));
+  function show(i) {
+    idx = Math.max(0, Math.min(chapters.length - 1, i));
+    chapters.forEach((c, k) => c.classList.toggle('active', k === idx));
+    [...dots.children].forEach((d, k) => d.classList.toggle('on', k === idx));
+    document.getElementById('navTitle').textContent = `${idx + 1} / ${chapters.length} · ${chapters[idx].dataset.title}`;
+    location.hash = String(idx + 1);
+    window.scrollTo(0, 0);
+    if (idx === 4) refresh();
+  }
+  document.getElementById('prevBtn').onclick = () => show(idx - 1);
+  document.getElementById('nextBtn').onclick = () => show(idx + 1);
+  document.getElementById('notesBtn').onclick = () => document.documentElement.classList.toggle('notes');
+  document.getElementById('darkBtn').onclick = () => document.documentElement.classList.toggle('dark');
+
+  // --- chapter 3: transform ------------------------------------------------
+  let transformed = true;
+  const BEFORE = {
+    title: 'Every screen is a warehouse query.',
+    lead: 'The obvious design: the app calls an API, the API queries the Databricks SQL warehouse for the product 360, sales history, inventory, schedule and materials, calls Model Serving for the forecast and the recommended plan, and calls an LLM for the assistant. It works - when there\'s signal - and the meter runs on every tap.',
+    flow: `
+      <div class="node"><b>Planning app</b>Online-only. Spinner in the press shop.<span class="cost">per tap</span></div>
+      <div class="node"><b>API</b>Stateless. Fans each screen out to the warehouse.<span class="cost">per tap</span></div>
+      <div class="node dbx"><b>Databricks SQL warehouse</b>Sales history, inventory, schedule, alerts, materials - queried live. Must stay warm across three shifts.<span class="cost">$$$ / query</span></div>
+      <div class="node dbx"><b>Model Serving</b>Forecast and plan scored per request.<span class="cost">$$ / call</span></div>
+      <div class="node"><b>LLM</b>Every question is a fresh prompt with freshly queried context.<span class="cost">$$ / turn</span></div>`,
+    legend: '400 planners and supervisors × 24 product reviews × ~15 queries per review (forecast, inventory, schedule, alerts, materials, assistant). The warehouse never auto-stops.',
+    changes: `
+      <li>Warehouse must be up across every shift</li>
+      <li>Model Serving endpoint sized for the morning planning peak</li>
+      <li>No signal = no release</li>
+      <li>Same question from 400 planners = 400 LLM calls</li>`,
+    btn: 'Transform the stack (T)', hint: 'Press to move the per-request load onto the Couchbase data plane.',
+  };
+  const AFTER = {
+    title: 'One export a night. Everything else served from Couchbase.',
+    lead: 'Databricks still does the heavy lifting - the sales, market and supply chain joins and the demand-planning model - once, at 4:30 am. The export lands in Couchbase Server, Sync Gateway puts each plant on its planner\'s phone, and the assistant answers from AOM\'s Context Cache and Couchbase. The warehouse auto-stops before first shift clocks in.',
+    flow: `
+      <div class="node cb"><b>Planning app + Couchbase Lite</b>Every screen from the on-device database. Production orders written locally.<span class="cost ok">0 queries</span></div>
+      <div class="node cb"><b>Sync Gateway</b>One plant per planner. Push production orders, pull results.<span class="cost ok">replication</span></div>
+      <div class="node cb"><b>Couchbase Server</b>Products, forecasts, production plans, materials catalog, warehouse stock, release state - loaded once from the export.<span class="cost ok">serves all day</span></div>
+      <div class="node dbx"><b>Databricks job · 4:30 am</b>Join + model + JSON export. Warehouse stops at 4:50.<span class="cost ok">1 run / day</span></div>
+      <div class="node aom"><b>AOM</b>Context Cache, LLM cache, KB retrieval, governed tools.<span class="cost ok">cache hits</span></div>`,
+    legend: 'One scheduled job. 400 planners and supervisors × 24 product reviews × ~15 reads per review are served from Couchbase and Couchbase Lite. Warehouse uptime: ~20 minutes.',
+    changes: `
+      <li>Warehouse runs ~20 minutes a day, then auto-stops</li>
+      <li>Model scored once; no serving endpoint to keep hot</li>
+      <li>No signal = production order captured anyway, synced later</li>
+      <li>Same question from 400 planners = 1 LLM call + 399 cache hits</li>`,
+    btn: 'Back to per-request (T)', hint: 'Databricks is now a producer, not a serving tier.',
+  };
+  function transform(animated) {
+    transformed = !transformed;
+    const t = transformed, s = t ? AFTER : BEFORE;
+    document.getElementById('ch3title').textContent = s.title;
+    document.getElementById('ch3lead').textContent = s.lead;
+    document.getElementById('flow').innerHTML = s.flow;
+    if (animated === false) document.getElementById('qpd').textContent = t ? '1' : '144,000';
+    else animate(document.getElementById('qpd'), t ? 144000 : 1, t ? 1 : 144000, v => v.toLocaleString());
+    const meter = document.getElementById('meter');
+    meter.classList.toggle('ok', t);
+    meter.firstElementChild.style.width = t ? '1%' : '100%';
+    document.getElementById('meterLegend').textContent = s.legend;
+    document.getElementById('changeList').innerHTML = s.changes;
+    document.getElementById('transformBtn').textContent = s.btn;
+    document.getElementById('transformHint').textContent = s.hint;
+  }
+  function animate(el, from, to, fmt) {
+    const t0 = performance.now(), dur = 900;
+    (function tick(now) {
+      const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(from + (to - from) * e));
+      if (p < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  document.getElementById('transformBtn').onclick = () => transform();
+  transform(false); // render the "before" state
+
+  // --- chapter 4: stepper ---------------------------------------------------
+  const lines = [['Ductile iron pump housing casting, pallet of 40', 4, 4120.00], ['Gear steel bar 8620, bundle', 1, 960.00], ['Shaft seal kit, Viton, box of 200', 1, 540.00], ['Ball bearing 6205-2RS, case of 100', 1, 460.00], ['Socket head cap screw M8x25, box of 1,000', 1, 390.00], ['Corrugated shipper, bundle of 250', 1, 140.00]];
+  const total = lines.reduce((s, l) => s + l[1] * l[2], 0);
+  const money = v => '$' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const alerts = `<div class="row"><span><b>major</b> · Demand spike: orders +38% vs forecast</span><span class="tag bad">alert</span></div><div class="row"><span><b>major</b> · Supplier delay: casting PO 6 days late</span><span class="tag bad">alert</span></div>`;
+  const build = `<div class="row"><span>Build this week · model recommends <b>1,200</b> (900 scheduled, capacity 1,300)</span><span class="tag ok">+300</span></div>`;
+  const rows = build + lines.slice(0, 2).map(l => `<div class="row"><span>${l[1]} × ${l[0]}</span><span class="money">${money(l[1] * l[2])}</span></div>`).join('') + `<div class="row"><span>+ ${lines.length - 2} more materials · 2 alerts + 6 readiness checks</span><span class="money">${money(total)}</span></div>`;
+  const A = [
+    `<div class="status muted">Open HP-2200 from today's floor walk.</div>`,
+    `<div class="status ok">Forecast, inventory (4.2 days of cover against 10), alerts and the production plan render from Couchbase Lite - instantly, no signal.</div>${alerts}${rows}`,
+    `${rows}<div class="status wait">Checks on device: 1,200 units fits the cell's capacity. ${money(total)} of materials is $3,774.00 over the remaining material budget, and the warehouse has 3 of 4 pallets of castings. Release as a budget override.</div>`,
+    `${rows}<div class="status ok">Readiness checklist ticked with the supervisor, production order saved to Couchbase Lite · <b>On device</b>. Nothing left to do at the line.</div>`,
+    `${rows}<div class="status wait">At the cell door: replicator pushed the production order through Sync Gateway → AOM holds it → <b>Awaiting approval</b>.</div>`,
+    `${rows}<div class="status ok">Plant Controller approved in AOM. Worker released <b>PRO-261113-48811</b>: 1,200 units on Line 3, 2 alerts cleared, 1 pallet of castings on order. Schedule, budget and plan updated on the phone.</div>`,
+  ];
+  const B = [
+    `<div class="status muted">Open HP-2200.</div>`,
+    `<div class="status bad">Loading forecast… warehouse query can't be sent. Retry? (3 of 3)</div>`,
+    `<div class="status bad">Inventory and materials unavailable - the lookup needs the API. Maya walks back to the office to print the exception report.</div>`,
+    `<div class="status bad">POST /production-orders failed: network unreachable. The new quantity goes on a clipboard; the cell starts the 900 that was scheduled.</div>`,
+    `<div class="status wait">Back at the desk: re-key the quantity, 6 material lines and 8 checks; 15 warehouse queries run now instead.</div>`,
+    `<div class="status bad">Budget error at 1:40 pm. Override requested by email; the castings aren't ordered until Monday and the cell is 300 pumps short.</div>`,
+  ];
+  let step = 0;
+  function renderStep() {
+    document.getElementById('phoneA').innerHTML = A[step];
+    document.getElementById('phoneB').innerHTML = B[step];
+    document.getElementById('stepLabel').textContent = `Step ${step} of ${A.length - 1}`;
+    const sig = step >= 4 ? 'Wi-Fi' : 'no signal';
+    document.getElementById('sigA').textContent = sig; document.getElementById('sigB').textContent = sig;
+  }
+  document.getElementById('stepBtn').onclick = () => { step = (step + 1) % A.length; renderStep(); };
+  document.getElementById('resetBtn').onclick = () => { step = 0; renderStep(); };
+  renderStep();
+
+  // --- chapter 5: live numbers ---------------------------------------------
+  const fmtPct = v => v == null ? '-' : v.toFixed(0) + '%';
+  async function refresh() {
+    try {
+      const r = await fetch('/api/status'); const s = await r.json(); const m = s.metrics || {};
+      const set = (id, v) => document.getElementById(id).textContent = v;
+      set('m_wq', (m.warehouse_queries_avoided || 0).toLocaleString());
+      set('m_usd', '$' + (m.estimated_dbx_spend_avoided_usd || 0).toFixed(2));
+      set('m_rate', '$' + (m.dbx_cost_per_query_usd || 0).toFixed(3));
+      set('m_ctx', fmtPct(m.context_hit_rate)); set('m_turns', m.assistant_turns || 0);
+      set('m_llm', fmtPct(m.llm_hit_rate));
+      set('m_orders', m.production_orders || 0); set('m_offline', m.production_orders_queued_offline || 0); set('m_value', '$' + (m.materials_value_usd || 0).toLocaleString(undefined, {maximumFractionDigits: 0}));
+      set('m_appr', m.production_orders_awaiting_approval || 0);
+      set('m_export', s.export_date || '-'); set('m_rows', (s.load && s.load.rows || 0).toLocaleString()); set('m_planners', s.load && s.load.planners || 0);
+      set('m_ms', (m.model_serving_calls_avoided || 0).toLocaleString());
+      if (s.aom && s.aom.dashboard_url) document.getElementById('aomLink').href = s.aom.dashboard_url;
+      document.getElementById('liveNote').textContent = `Live from /api/status · store: ${s.store} · AOM ${s.aom && s.aom.configured ? 'connected' : 'not configured (local fallbacks)'} · ${new Date().toLocaleTimeString()}`;
+    } catch (e) {
+      document.getElementById('liveNote').textContent = 'Backend not reachable at /api/status yet.';
+    }
+  }
+  setInterval(() => { if (idx === 4) refresh(); }, 5000);
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowRight') show(idx + 1);
+    else if (e.key === 'ArrowLeft') show(idx - 1);
+    else if (e.key.toLowerCase() === 'n') document.documentElement.classList.toggle('notes');
+    else if (e.key.toLowerCase() === 't' && idx === 2) transform();
+    else if (e.key === ' ' && idx === 3) { e.preventDefault(); step = (step + 1) % A.length; renderStep(); }
+  });
+  show(parseInt(location.hash.slice(1) || '1', 10) - 1);
+})();
+</script>
+</body>
+</html>
