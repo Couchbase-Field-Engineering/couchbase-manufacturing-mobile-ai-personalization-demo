@@ -16,7 +16,7 @@ aom:
 # Published ports on hal. Change them if another demo already holds one
 # (kubectl get svc -A | grep LoadBalancer shows what is taken).
 web:
-  service: { type: LoadBalancer, port: 8085 }
+  service: { type: LoadBalancer, port: 5155 }
 backend:
   service: { type: LoadBalancer, port: 8204 }
 syncGateway:

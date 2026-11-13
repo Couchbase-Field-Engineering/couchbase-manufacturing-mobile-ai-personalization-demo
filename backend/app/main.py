@@ -102,8 +102,8 @@ def current_planner(authorization: str | None = Header(default=None)) -> str:
 async def index():
     """Landing page: where everything in the demo lives."""
     rows = [
-        ("http://localhost:8085/story", "The story: a production plan that doesn't wait for Wi-Fi, and a Databricks bill that stops growing per tap (start here)"),
-        ("http://localhost:8085", "The app in a browser (docker compose service <code>web</code>)"),
+        ("https://localhost:5155/story", "The story: a production plan that doesn't wait for Wi-Fi, and a Databricks bill that stops growing per tap (start here)"),
+        ("https://localhost:5155", "The app in a browser (docker compose service <code>web</code>)"),
         ("http://localhost:8204/api/status", "Backend status: export load, Knowledge Base publishing, AOM, Sync Gateway, Databricks offload"),
         ("http://localhost:8204/docs", "Backend API (OpenAPI)"),
         ("http://localhost:8204/mfg/mcp", "MCP server <code>mfg-production-planning</code> (called by AOM)"),
@@ -116,7 +116,7 @@ async def index():
 <style>body{{font-family:-apple-system,Arial,sans-serif;max-width:760px;margin:48px auto;padding:0 16px;color:#1f1f1f}}
 h1{{color:#ea2328}} li{{margin:10px 0}} a{{color:#ea2328;font-weight:600}}</style></head>
 <body><h1>Couchbase manufacturing production planning demo</h1>
-<p>This is the backend. Open the app at <a href="http://localhost:8085">http://localhost:8085</a>.
+<p>This is the backend. Open the app at <a href="https://localhost:5155">https://localhost:5155</a>.
 Loaded export: <b>{STATE.get("export_date") or "loading..."}</b> ({loader.STATUS.get("state")}).</p>
 <ul>{items}</ul></body></html>"""
 

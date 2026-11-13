@@ -26,7 +26,7 @@ Built from the telecom field service demo (same architecture, new domain), which
 
 ## How the demo opens
 
-`http://<host>:8085/story` is **A Production Plan That Doesn't Wait for Wi-Fi**, a seven-chapter story for the room before the live app. Use ←/→ to move between chapters, **N** for talking points and ☾ for dark mode:
+`https://<host>:5155/story` is **A Production Plan That Doesn't Wait for Wi-Fi**, a seven-chapter story for the room before the live app. Use ←/→ to move between chapters, **N** for talking points and ☾ for dark mode:
 
 1. **A day on the floor.** Why planners are offline so often: press shops, foundry bays, paint booths, mezzanine stores, cold docks. It closes with Maya releasing an $18,970 material order for the HP-2200 gear pump that is $3,774 over the product's remaining budget, and raising the week's build from 900 to 1,200.
 2. **What the app needs.** The three decisions the model makes (schedule, inventory, materials) and eight requirements: four for the phone, four for the AI and the data platform.
@@ -123,17 +123,25 @@ python3 scripts/register_with_aom.py --admin-password '<AOM admin password>'
 docker compose up -d --build backend       # picks up AOM_* from .env, publishes the KB, scopes the RAG app
 ```
 
-Then open **http://localhost:8085/story** for the story, **http://localhost:8085** for the app in a browser, or **http://localhost:8204** for a page linking every service.
+Then open **https://localhost:5155/story** for the story, **https://localhost:5155** for the app in a browser, or **http://localhost:8204** for a page linking every service.
 
 | Port | Service |
 |---|---|
-| `8085` | **The app in a browser** (`web` service), shown inside a phone frame (add `?frame=0` for full width) |
+| `5155` | **The app in a browser** over HTTPS, behind the sign-in page (`web` service), shown inside a phone frame (add `?frame=0` for full width) |
 | `8204` | Backend API + MCP server (`/mfg/mcp`); `/` lists every link |
 | `4992` | Sync Gateway public, which is what phones replicate with: `ws://<host>:4992/manufacturing` |
 | `127.0.0.1:4993` | Sync Gateway admin |
 | `127.0.0.1:18095` | Couchbase Web Console (Administrator / password123) |
 
-Ports are one above the telecom field service demo's (8084 / 8203 / 4990 / 4991 / 18094), so both stacks can run side by side next to AOM and the other demos. Bucket and Sync Gateway database are `manufacturing`, scope `planning`; container names start with `mfg-`.
+**Sign-in and HTTPS.** The browser UI (the app, the story page and everything else the `web` container serves) is on **`https://<host>:5155`** and opens on a sign-in page:
+
+| Username | Password |
+|---|---|
+| `demo` | `Couchbase123!` |
+
+Change them with `DEMO_USERNAME` / `DEMO_PASSWORD` in `.env` (Compose) or `web.auth.username` / `web.auth.password` (Helm). The container serves a self-signed certificate it generates on first start, so the browser warns once; add the address people use to `TLS_HOSTS` (Compose) so it is in the certificate, or serve a real one by mounting `tls.crt` / `tls.key` at `/etc/nginx/tls` (Helm: `web.tls.secretName`). Plain `http://` on the same port redirects to HTTPS, and `/signout` ends the session. The sign-in covers the browser UI only: the backend API and Sync Gateway ports are unchanged.
+
+Ports are one above the telecom field service demo's backend, Sync Gateway and console ports (8203 / 4990 / 4991 / 18094), so both stacks can run side by side next to AOM and the other demos. Bucket and Sync Gateway database are `manufacturing`, scope `planning`; container names start with `mfg-`.
 
 ### 3. The app on a device with Couchbase Lite
 
@@ -157,7 +165,7 @@ AOM_ADMIN_PASSWORD='<current AOM password>' ONLY=manufacturing ./deploy/k8s/depl
 AOM_ADMIN_PASSWORD='<current AOM password>' TARGET=hal ONLY=manufacturing ./deploy/k8s/deploy.sh   # hal
 ```
 
-`deploy/k8s/values-mother.yaml` and `values-hal.yaml` publish it on **8085 / 8204 / 4992**. With `AOM_AUTO_REGISTER=true` the backend registers itself with AOM (MCP server, agent, approval tier, Knowledge Base and RAG application); progress is in `/api/status` under `aom.registration`. A daily CronJob (04:30 America/New_York) drops a new mock export and the backend picks it up within five minutes.
+`deploy/k8s/values-mother.yaml` and `values-hal.yaml` publish it on **5155 / 8204 / 4992**. With `AOM_AUTO_REGISTER=true` the backend registers itself with AOM (MCP server, agent, approval tier, Knowledge Base and RAG application); progress is in `/api/status` under `aom.registration`. A daily CronJob (04:30 America/New_York) drops a new mock export and the backend picks it up within five minutes.
 
 ---
 
