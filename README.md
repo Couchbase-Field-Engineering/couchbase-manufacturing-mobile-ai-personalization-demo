@@ -20,8 +20,6 @@ The app's assistant is **registered with, and governed by, the Couchbase Agent O
 * LLM calls go through AOM's **LLM Caching** gateway
 * every production order, budget override, overtime shift, standing order, supplier return and line check runs as an RBAC-checked, traced and audited AOM tool call, with human approval for budget overrides (the Plant Controller) and overtime shifts (the Plant Manager)
 
-Built from the telecom field service demo (same architecture, new domain), which is in turn based on the Staples field order capture and Princess Cruises mobile RAG demos and [Fujio-Turner/mobile_field_service](https://github.com/Fujio-Turner/mobile_field_service): Expo / React Native, Couchbase Lite via `cbl-reactnative`, Sync Gateway session auth, and offline-first writes that sync when the network comes back.
-
 ---
 
 ## How the demo opens
